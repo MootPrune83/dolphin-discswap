@@ -1,4 +1,19 @@
-Note - See Tools/disc_swap_client.py for an example on the usage of the API that is implemented into this modified version of dolphin
+# Make instructions
+Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"
+
+1. Download Visual Studio Code 2022 or later
+2. On the top bar go to File > Clone Repository
+3. Set the repository location to https://github.com/MootPrune83/dolphin-discswap/tree/master.git
+4. Set the path to whatever suits you best
+5. Clone the project
+6. Open a terminal in the root of the project you have just cloned
+7. Type `git submodule update --init --recursive`
+8. Back in Visual Studio go to File > Open > Project / Solution
+9. Navigate to `yourprojectroot/Source` and select `dolphin-emu.sln`
+10. Ensure that the configuration is set to "Release" "x64" in the top bar instead of "Debug" "x64"
+11. Once opened in the top bar click Build > Build Solution
+12. Once the project has built, navigate to `yourprojectroot/binary/x64`
+13. There you should see your fully compiled modified version of dolphin
 
 # Dolphin - A GameCube and Wii Emulator
 
