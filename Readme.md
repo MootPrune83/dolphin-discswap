@@ -4,18 +4,27 @@ This build of the Dolphin emulator opens a TCP socket on `127.0.0.1:8394`, allow
 Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"`
 
 1. Download Visual Studio Code 2022 or later
-2. On the top bar go to File > Clone Repository
-3. Set the repository location to https://github.com/MootPrune83/dolphin-discswap/tree/master.git
+2. Open Visual Studio Code and click "Clone a Repository"
+   ![image](https://github.com/user-attachments/assets/46305083-4095-4036-ba8d-b46a63453dd4)
+3. Set the repository location to `http://github.com/MootPrune83/dolphin-discswap.git`
 4. Set the path to whatever suits you best
-5. Clone the project
-6. Open a terminal in the root of the project you have just cloned
-7. Type `git submodule update --init --recursive`
-8. Back in Visual Studio go to File > Open > Project / Solution
+5. Click "clone" in the bottom right
+   ![image](https://github.com/user-attachments/assets/bf7fc08e-8599-4676-8231-14ea7001e3eb)
+6. Once the project has finished cloning, open a terminal in the root of the project
+7. Run `git submodule update --init --recursive`
+    ![image](https://github.com/user-attachments/assets/bdc3bfcc-f64a-4bf9-a26b-8035e198090f)
+8. Back in Visual Studio go to File > Open > Project / Solution `(Ctrl + Shift + O)`
 9. Navigate to `yourprojectroot/Source` and select `dolphin-emu.sln`
+    ![image](https://github.com/user-attachments/assets/1922e338-9a07-4834-9204-644f66fad535)
 10. Ensure that the configuration is set to "Release" "x64" in the top bar instead of "Debug" "x64"
-11. Once opened in the top bar click Build > Build Solution
-12. Once the project has built, navigate to `yourprojectroot/binary/x64`
-13. There you should see your fully compiled modified version of dolphin
+    ![image](https://github.com/user-attachments/assets/da506ee6-70b7-4b3a-adee-55c7dbe9f2eb)
+11. Ensure that all projects are loaded
+    ![image](https://github.com/user-attachments/assets/c389c9d9-7293-4a2e-95d1-feec40640425)
+12. In the top bar click Build > Build Solution (or rebuild solution if you have already built the solution on your machine)
+    ![image](https://github.com/user-attachments/assets/b1897614-b0cb-4349-914e-386c319ade26)
+13. Once the project has built, navigate to `yourprojectroot/binary/x64`
+    ![image](https://github.com/user-attachments/assets/313342b1-353f-4317-9ea2-b974a09c2b51)
+14. You should see your fully compiled modified version of dolphin
 
 # Dolphin - A GameCube and Wii Emulator
 
@@ -54,22 +63,6 @@ Please read the [FAQ](https://dolphin-emu.org/docs/faq/) before using Dolphin.
     * A graphics processor that supports standard desktop OpenGL features is recommended for best performance.
 
 Dolphin can only be installed on devices that satisfy the above requirements. Attempting to install on an unsupported device will fail and display an error message.
-
-## Building for Windows
-
-Use the solution file `Source/dolphin-emu.sln` to build Dolphin on Windows.
-Dolphin targets the latest MSVC shipped with Visual Studio or Build Tools.
-Other compilers might be able to build Dolphin on Windows but have not been
-tested and are not recommended to be used. Git and latest Windows SDK must be
-installed when building.
-
-Make sure to pull submodules before building:
-```sh
-git submodule update --init --recursive
-```
-
-The "Release" solution configuration includes performance optimizations for the best user experience but complicates debugging Dolphin.
-The "Debug" solution configuration is significantly slower, more verbose and less permissive but makes debugging Dolphin easier.
 
 ## Building for Linux and macOS
 
