@@ -7,16 +7,23 @@ import urllib.parse
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Swap the currently inserted disc in Dolphin.")
+    parser = argparse.ArgumentParser(
+        description="Swap the currently inserted disc in Dolphin."
+    )
     parser.add_argument(
-        "path",
+        "--path", "-p",
+        required=True,
         help=(
             "Path to the new disc image. Example: "
-            r"D:\\Dolphin-x64\\Games\\MyGame.iso"
+            r"C:\\Users\\srlgo\\Downloads\\DolphinTest\\New Super Mario Bros. Wii (USA) (En,Fr,Es) (Rev 1).rvz"
         ),
     )
-    parser.add_argument("--host", default="localhost", help="Server hostname (default: localhost)")
-    parser.add_argument("--port", type=int, default=8394, help="Server port (default: 8394)")
+    parser.add_argument(
+        "--host", default="localhost", help="Server hostname (default: localhost)"
+    )
+    parser.add_argument(
+        "--port", type=int, default=8394, help="Server port (default: 8394)"
+    )
     args = parser.parse_args()
 
     encoded = urllib.parse.quote(args.path)
