@@ -15,7 +15,7 @@ def main() -> None:
         required=True,
         help=(
             "Path to the new disc image. Example: "
-            r"C:\\Users\\srlgo\\Downloads\\DolphinTest\\New Super Mario Bros. Wii (USA) (En,Fr,Es) (Rev 1).rvz"
+            r"C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"
         ),
     )
     parser.add_argument(
