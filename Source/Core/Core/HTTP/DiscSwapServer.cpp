@@ -12,6 +12,7 @@
 #include "Common/Logging/Log.h"
 #include "Common/Thread.h"
 #include "Common/FileUtil.h"
+#include "Common/SocketContext.h"
 #include "Core/Core.h"
 #include "Core/HW/DVD/DVDInterface.h"
 #include "Core/System.h"
@@ -54,7 +55,11 @@ void SendResponse(sf::TcpSocket& sock, const std::string& status, const std::str
       << "Content-Length: " << body.size() << "\r\n"
       << "Connection: close\r\n\r\n" << body;
   const std::string resp = out.str();
-  sock.send(resp.c_str(), resp.size());
+  const sf::Socket::Status send_status = sock.send(resp.c_str(), resp.size());
+  if (send_status != sf::Socket::Status::Done)
+  {
+    ERROR_LOG_FMT(CORE, "Failed to send HTTP response: {}", static_cast<int>(send_status));
+  }
 }
 
 void HandleRequest(sf::TcpSocket& sock)
