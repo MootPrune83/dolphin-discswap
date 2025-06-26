@@ -73,6 +73,7 @@
 #include "Core/State.h"
 #include "Core/System.h"
 #include "Core/WiiRoot.h"
+#include "Core/HTTP/DiscSwapServer.h"
 
 #ifdef USE_MEMORYWATCHER
 #include "Core/MemoryWatcher.h"
@@ -254,6 +255,7 @@ bool Init(Core::System& system, std::unique_ptr<BootParameters> boot, const Wind
   // Start the emu thread
   s_state.store(State::Starting);
   s_emu_thread = std::thread(EmuThread, std::ref(system), std::move(boot), prepared_wsi);
+  StartDiscSwapServer(system);
   return true;
 }
 
@@ -274,6 +276,8 @@ void Stop(Core::System& system)  // - Hammertime!
   const State state = s_state.load();
   if (state == State::Stopping || state == State::Uninitialized)
     return;
+
+  StopDiscSwapServer();
 
   AchievementManager::GetInstance().CloseGame();
 
@@ -906,6 +910,7 @@ void UpdateTitle(Core::System& system)
 
 void Shutdown(Core::System& system)
 {
+  StopDiscSwapServer();
   // During shutdown DXGI expects us to handle some messages on the UI thread.
   // Therefore we can't immediately block and wait for the emu thread to shut
   // down, so we join the emu thread as late as possible when the UI has already
