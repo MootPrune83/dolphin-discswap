@@ -1,7 +1,5 @@
 # What does this modified version of dolphin do differently?
-The only difference between this version of the dolphin emulator and the official one, is that it opens up a TCP socket at 127.0.0.1:8394 that allows you to change the currently inserted game within the virtual Wii live and without neededing to interface with dolphin.
-
-The point of this is so that you do not need to use a mouse and keyboard to interface with dolphin to change the game, and can instead use an external device like an ESP32 to send a request to an intermidiate python app which interfaces with this API to change the game. I plan on creating firmware for the M5Stack Core IoT Development Kit V2.7 that will allow you to change games fully remotely to allow for a more seamless experience.
+This build of the Dolphin emulator opens a TCP socket on `127.0.0.1:8394`, allowing you to swap the currently loaded Wii game without touching Dolphin’s GUI. Instead of using a mouse and keyboard, you can send a request from an external devce (like an ESP32) to a small Python helper app (or similar) running alongside Dolphin. That helper app speaks to the socket API and swaps in the new game automatically. I'm also planning on creating firmware for the M5Stack Core V2.7 to interface with a custom helper app to swap the game fully remotely.
 # Make instructions
 Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"`
 
