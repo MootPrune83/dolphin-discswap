@@ -1,5 +1,5 @@
 # Make instructions
-Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"
+Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"`
 
 1. Download Visual Studio Code 2022 or later
 2. On the top bar go to File > Clone Repository
