@@ -35,7 +35,7 @@ Note - See `Tools/disc_swap_client.py` for an example on the usage of the API th
     <img src="https://github.com/user-attachments/assets/b1897614-b0cb-4349-914e-386c319ade26" alt="image" width="400"/>
 
 13. Once the project has built, navigate to `yourprojectroot/binary/x64`  
-    <img src="https://github.com/user-attachments/assets/313342b1-353f-4317-9ea2-b974a09c2b51" alt="image" width="400"/>
+    <img src="https://github.com/user-attachments/assets/4caa8ff5-ada2-4c16-b8ac-6e51830e65d7" alt="image" width="400"/>
 
 14. You should see your fully compiled modified version of Dolphin
 
