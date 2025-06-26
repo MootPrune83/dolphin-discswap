@@ -3,28 +3,41 @@ This build of the Dolphin emulator opens a TCP socket on `127.0.0.1:8394`, allow
 # Make instructions
 Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"`
 
-1. Download Visual Studio Code 2022 or later
-2. Open Visual Studio Code and click "Clone a Repository"
-   ![image](https://github.com/user-attachments/assets/46305083-4095-4036-ba8d-b46a63453dd4)
+1. Download and install [Visual Studio Code 2022]([url](https://visualstudio.microsoft.com/vs/)) or later
+
+2. Open Visual Studio Code and click "Clone a Repository"  
+   <img src="https://github.com/user-attachments/assets/46305083-4095-4036-ba8d-b46a63453dd4" alt="image" width="600"/>
+
 3. Set the repository location to `http://github.com/MootPrune83/dolphin-discswap.git`
+
 4. Set the path to whatever suits you best
-5. Click "clone" in the bottom right
-   ![image](https://github.com/user-attachments/assets/bf7fc08e-8599-4676-8231-14ea7001e3eb)
+
+5. Click "clone" in the bottom right  
+   <img src="https://github.com/user-attachments/assets/bf7fc08e-8599-4676-8231-14ea7001e3eb" alt="image" width="600"/>
+
 6. Once the project has finished cloning, open a terminal in the root of the project
-7. Run `git submodule update --init --recursive`
-    ![image](https://github.com/user-attachments/assets/bdc3bfcc-f64a-4bf9-a26b-8035e198090f)
+
+7. Run `git submodule update --init --recursive`  
+   <img src="https://github.com/user-attachments/assets/bdc3bfcc-f64a-4bf9-a26b-8035e198090f" alt="image" width="600"/>
+
 8. Back in Visual Studio go to File > Open > Project / Solution `(Ctrl + Shift + O)`
-9. Navigate to `yourprojectroot/Source` and select `dolphin-emu.sln`
-    ![image](https://github.com/user-attachments/assets/1922e338-9a07-4834-9204-644f66fad535)
-10. Ensure that the configuration is set to "Release" "x64" in the top bar instead of "Debug" "x64"
-    ![image](https://github.com/user-attachments/assets/da506ee6-70b7-4b3a-adee-55c7dbe9f2eb)
-11. Ensure that all projects are loaded
-    ![image](https://github.com/user-attachments/assets/c389c9d9-7293-4a2e-95d1-feec40640425)
-12. In the top bar click Build > Build Solution (or rebuild solution if you have already built the solution on your machine)
-    ![image](https://github.com/user-attachments/assets/b1897614-b0cb-4349-914e-386c319ade26)
-13. Once the project has built, navigate to `yourprojectroot/binary/x64`
-    ![image](https://github.com/user-attachments/assets/313342b1-353f-4317-9ea2-b974a09c2b51)
-14. You should see your fully compiled modified version of dolphin
+
+9. Navigate to `yourprojectroot/Source` and select `dolphin-emu.sln`  
+   <img src="https://github.com/user-attachments/assets/1922e338-9a07-4834-9204-644f66fad535" alt="image" width="600"/>
+
+10. Ensure that the configuration is set to "Release" "x64" in the top bar instead of "Debug" "x64"  
+    <img src="https://github.com/user-attachments/assets/da506ee6-70b7-4b3a-adee-55c7dbe9f2eb" alt="image" width="600"/>
+
+11. Ensure that all projects are loaded  
+    <img src="https://github.com/user-attachments/assets/c389c9d9-7293-4a2e-95d1-feec40640425" alt="image" width="200"/>
+
+12. In the top bar click Build > Build Solution (or rebuild solution if you have already built the solution on your machine)  
+    <img src="https://github.com/user-attachments/assets/b1897614-b0cb-4349-914e-386c319ade26" alt="image" width="400"/>
+
+13. Once the project has built, navigate to `yourprojectroot/binary/x64`  
+    <img src="https://github.com/user-attachments/assets/313342b1-353f-4317-9ea2-b974a09c2b51" alt="image" width="400"/>
+
+14. You should see your fully compiled modified version of Dolphin
 
 # Dolphin - A GameCube and Wii Emulator
 
