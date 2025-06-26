@@ -257,6 +257,7 @@
     <ClInclude Include="Core\HLE\HLE.h" />
     <ClInclude Include="Core\Host.h" />
     <ClInclude Include="Core\HotkeyManager.h" />
+    <ClInclude Include="Core\HTTP\DiscSwapServer.h" />
     <ClInclude Include="Core\HW\AddressSpace.h" />
     <ClInclude Include="Core\HW\AudioInterface.h" />
     <ClInclude Include="Core\HW\CPU.h" />
@@ -934,6 +935,7 @@
     <ClCompile Include="Core\HLE\HLE_VarArgs.cpp" />
     <ClCompile Include="Core\HLE\HLE.cpp" />
     <ClCompile Include="Core\HotkeyManager.cpp" />
+    <ClCompile Include="Core\HTTP\DiscSwapServer.cpp" />
     <ClCompile Include="Core\HW\AddressSpace.cpp" />
     <ClCompile Include="Core\HW\AudioInterface.cpp" />
     <ClCompile Include="Core\HW\CPU.cpp" />
