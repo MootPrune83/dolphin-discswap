@@ -5,6 +5,15 @@
 #include <ESPAsyncWebServer.h>
 #include <HTTPClient.h>
 #include <TJpg_Decoder.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <freertos/semphr.h>
+
+// Library references:
+//  - M5Unified by M5Stack / lovyan03: https://github.com/m5stack/M5Unified
+//  - ESPAsyncWebServer by ESP32Async: https://github.com/ESP32Async/ESPAsyncWebServer
+//  - TJpg_Decoder by Bodmer: https://github.com/Bodmer/TJpg_Decoder
+//  - FreeRTOS kernel by Richard Barry: https://www.freertos.org/
 
 // ——————— CONFIG ———————
 static constexpr char WIFI_SSID[]   = "SSID";
@@ -108,6 +117,21 @@ void drawBoxArt(const String &fn,int x,int y,bool darken=false){
   }
 }
 
+struct DrawTaskArgs {
+  const String*      img;
+  int                x;
+  int                y;
+  bool               darken;
+  SemaphoreHandle_t  done;
+};
+
+void drawBoxArtTask(void* p){
+  DrawTaskArgs* a = (DrawTaskArgs*)p;
+  drawBoxArt(*(a->img), a->x, a->y, a->darken);
+  xSemaphoreGive(a->done);
+  vTaskDelete(nullptr);
+}
+
 void renderMenu(){
   M5.Display.clear();
   if(games.empty()){
@@ -125,8 +149,19 @@ void renderMenu(){
   int left=(currentIndex-1+games.size())%games.size();
   int right=(currentIndex+1)%games.size();
 
-  drawBoxArt(games[left].img,  cx-SPACING,y0,true);
-  drawBoxArt(games[right].img, cx+SPACING,y0,true);
+  SemaphoreHandle_t semL = xSemaphoreCreateBinary();
+  SemaphoreHandle_t semR = xSemaphoreCreateBinary();
+  DrawTaskArgs leftArgs{&games[left].img,  cx-SPACING, y0, true, semL};
+  DrawTaskArgs rightArgs{&games[right].img, cx+SPACING, y0, true, semR};
+
+  xTaskCreatePinnedToCore(drawBoxArtTask, "drawL", 4096, &leftArgs, 1, nullptr, 0);
+  xTaskCreatePinnedToCore(drawBoxArtTask, "drawR", 4096, &rightArgs, 1, nullptr, 1);
+
+  xSemaphoreTake(semL, portMAX_DELAY);
+  xSemaphoreTake(semR, portMAX_DELAY);
+  vSemaphoreDelete(semL);
+  vSemaphoreDelete(semR);
+
   drawBoxArt(games[currentIndex].img,cx,y0,false);
 
   // draw title bar
@@ -153,20 +188,49 @@ String urlEncode(const String &s){
   return e;
 }
 
+struct AudioTaskArgs {
+  String             path;
+  SemaphoreHandle_t  done;
+};
+
+void audioTask(void* p){
+  AudioTaskArgs* a = (AudioTaskArgs*)p;
+  File f = SPIFFS.open(a->path, FILE_READ);
+  if(f){
+    size_t len = f.size();
+    uint8_t* buf = (uint8_t*)malloc(len);
+    if(buf){
+      f.read(buf, len);
+      f.close();
+      M5.Speaker.playWav(buf, len);
+      while(M5.Speaker.isPlaying()) vTaskDelay(10);
+      free(buf);
+    }else{
+      f.close();
+    }
+  }
+  if(a->done) xSemaphoreGive(a->done);
+  delete a;
+  vTaskDelete(nullptr);
+}
+
+void playAudio(const char* path, bool wait=false){
+  SemaphoreHandle_t done = wait ? xSemaphoreCreateBinary() : nullptr;
+  AudioTaskArgs* args = new AudioTaskArgs{String(path), done};
+  xTaskCreatePinnedToCore(audioTask, "aud", 4096, args, 1, nullptr, 1);
+  if(wait){
+    xSemaphoreTake(done, portMAX_DELAY);
+    vSemaphoreDelete(done);
+  }
+}
+
 void nextTitle(){ if(!games.empty()){ currentIndex=(currentIndex+1)%games.size(); renderMenu(); lastActivity=millis(); }}
 void prevTitle(){ if(!games.empty()){ currentIndex=(currentIndex-1+games.size())%games.size(); renderMenu(); lastActivity=millis(); }}
 
 void sendSelect(){
   if(games.empty()) return;
   lastActivity=millis();
-  File s1=SPIFFS.open("/sound1.wav",FILE_READ);
-  if(s1){
-    size_t len=s1.size();
-    uint8_t*buf=(uint8_t*)malloc(len);
-    s1.read(buf,len);s1.close();
-    M5.Speaker.playWav(buf,len);
-    free(buf);
-  }
+  playAudio("/sound1.wav", false);
   String url=String("http://")+BRIDGE_HOST+":"+BRIDGE_PORT+
              "/swap?path="+urlEncode(games[currentIndex].path);
   HTTPClient http; http.begin(url); http.GET(); http.end();
@@ -184,6 +248,36 @@ String listFilesJson(){
     f=root.openNextFile();
   }
   return j+"]";
+}
+
+void controllerLoop(void*){
+  for(;;){
+    M5.update();
+    if(!sleeping){
+      if(M5.BtnA.wasPressed()) prevTitle();
+      if(M5.BtnC.wasPressed()) nextTitle();
+      if(M5.BtnB.wasPressed()) sendSelect();
+
+      unsigned long now=millis();
+      if(titlebarVisible && now>titlebarUntil){
+        M5.Display.fillRect(0,0,M5.Display.width(),TOP_PAD,TFT_BLACK);
+        titlebarVisible=false;
+        drawBoxArt(games[currentIndex].img,lastCX,lastY0,false);
+      }
+      if(!noSleep && now-lastActivity>SLEEP_TIMEOUT){
+        sleeping=true;
+        M5.Display.setBrightness(0);
+        WiFi.disconnect(true);
+        WiFi.mode(WIFI_OFF);
+        Serial.println("Entering soft sleep...");
+      }
+    } else {
+      if(M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()){
+        ESP.restart();
+      }
+    }
+    vTaskDelay(10/portTICK_PERIOD_MS);
+  }
 }
 
 void setupWebServer(){
@@ -249,43 +343,13 @@ void setup(){
   loadConfig();
   renderMenu();
 
-  File s2=SPIFFS.open("/sound2.wav",FILE_READ);
-  if(s2){
-    size_t len=s2.size();
-    uint8_t*buf=(uint8_t*)malloc(len);
-    s2.read(buf,len);s2.close();
-    M5.Speaker.playWav(buf,len);
-    while(M5.Speaker.isPlaying()) delay(10);
-    free(buf);
-  }
+  playAudio("/sound2.wav", true);
 
   lastActivity=millis();
+
+  xTaskCreatePinnedToCore(controllerLoop, "ctrl", 4096, nullptr, 1, nullptr, 0);
 }
 
 void loop(){
-  M5.update();
-  if(!sleeping){
-    if(M5.BtnA.wasPressed()) prevTitle();
-    if(M5.BtnC.wasPressed()) nextTitle();
-    if(M5.BtnB.wasPressed()) sendSelect();
-
-    unsigned long now=millis();
-    if(titlebarVisible && now>titlebarUntil){
-      M5.Display.fillRect(0,0,M5.Display.width(),TOP_PAD,TFT_BLACK);
-      titlebarVisible=false;
-      drawBoxArt(games[currentIndex].img,lastCX,lastY0,false);
-    }
-    if(!noSleep && now-lastActivity>SLEEP_TIMEOUT){
-      sleeping=true;
-      M5.Display.setBrightness(0);
-      WiFi.disconnect(true);
-      WiFi.mode(WIFI_OFF);
-      Serial.println("Entering soft sleep...");
-    }
-  } else {
-    if(M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()){
-      ESP.restart();
-    }
-  }
-  delay(10);
+  vTaskDelay(portMAX_DELAY);
 }
