@@ -1,4 +1,4 @@
-For instructions on setting up the associated (optional) ESP32 based disc controller, see the [M5StackController setup guide](https://github.com/MootPrune83/dolphin-discswap/tree/master/M5StackController).
+For instructions on setting up the associated (optional) ESP32 based wireless disc controller, see the [M5StackController setup guide](https://github.com/MootPrune83/dolphin-discswap/tree/master/M5StackController).
 
 # What does this modified version of dolphin do differently?
 This build of the Dolphin emulator opens a TCP socket on `127.0.0.1:8394`, allowing you to swap the currently loaded Wii game without touching Dolphin’s GUI. Instead of using a mouse and keyboard, you can send a request from an external devce (like an ESP32) to a small Python helper app (or similar) running alongside Dolphin. That helper app speaks to the socket API and swaps in the new game automatically. I'm also planning on creating firmware for the M5Stack Core V2.7 to interface with a custom helper app to swap the game fully remotely.
