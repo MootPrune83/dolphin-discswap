@@ -1,0 +1,1 @@
+Game Name|coverart.jpg|C:\path\to\game.iso
