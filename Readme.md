@@ -4,6 +4,8 @@ For instructions on setting up the associated (optional) ESP32 based wireless di
 This build of the Dolphin emulator opens a TCP socket on `127.0.0.1:8394`, allowing you to swap the currently loaded Wii game without touching Dolphin’s GUI. Instead of using a mouse and keyboard, you can send a request from an external devce (like an ESP32) to a small Python helper app (or similar) running alongside Dolphin. That helper app speaks to the socket API and swaps in the new game automatically.
 Note - See `Tools/disc_swap_client.py` for an example on the usage of the API that is implemented into this modified version of dolphin, to run this program use the `-p` switch to change the currently inserted disc, for example `python .\disc_swap_client.py -p "C:\\Users\\you\\Downloads\\DolphinTest\\game.rvz"`
 
+# Building for Windows
+
 1. Download and install [Visual Studio Code 2022]([url](https://visualstudio.microsoft.com/vs/)) or later
 
 2. Open Visual Studio Code and click "Clone a Repository"  
